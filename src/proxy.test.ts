@@ -73,7 +73,7 @@ test("サブドメインで指定したアップストリームへGETリクエ�
     const res = await request(portkeyPort, {
       method: "GET",
       path: "/hello",
-      headers: { host: `localhost~${upstreamPort}.localhost` },
+      headers: { host: `localhost_${upstreamPort}.localhost` },
     });
     assert.equal(res.statusCode, 200);
     assert.equal(res.body, "hello from upstream: GET /hello");
@@ -128,12 +128,12 @@ test("アップストリームに到達できない場合は502を返す", async
     const res = await request(portkeyPort, {
       method: "GET",
       path: "/",
-      headers: { host: `localhost~${deadPort}.localhost` },
+      headers: { host: `localhost_${deadPort}.localhost` },
     });
     assert.equal(res.statusCode, 502);
     assert.equal(
       res.body,
-      `Bad Gateway: localhost~${deadPort} is not reachable`,
+      `Bad Gateway: localhost_${deadPort} is not reachable`,
     );
   } finally {
     portkey.close();
@@ -159,7 +159,7 @@ test("Upgrade リクエストをアップストリームへ透過的にプロキ
     await new Promise<void>((resolve) => client.once("connect", () => resolve()));
 
     client.write(
-      `GET / HTTP/1.1\r\nHost: localhost~${upstreamPort}.localhost\r\nConnection: Upgrade\r\nUpgrade: websocket\r\n\r\n`,
+      `GET / HTTP/1.1\r\nHost: localhost_${upstreamPort}.localhost\r\nConnection: Upgrade\r\nUpgrade: websocket\r\n\r\n`,
     );
     const handshake = await readOnce(client);
     assert.match(handshake, /^HTTP\/1\.1 101 Switching Protocols/);
@@ -185,11 +185,11 @@ test("Upgrade リクエストでもアップストリームに到達できない
     await new Promise<void>((resolve) => client.once("connect", () => resolve()));
 
     client.write(
-      `GET / HTTP/1.1\r\nHost: localhost~${deadPort}.localhost\r\nConnection: Upgrade\r\nUpgrade: websocket\r\n\r\n`,
+      `GET / HTTP/1.1\r\nHost: localhost_${deadPort}.localhost\r\nConnection: Upgrade\r\nUpgrade: websocket\r\n\r\n`,
     );
     const response = await readOnce(client);
     assert.match(response, /^HTTP\/1\.1 502 Bad Gateway/);
-    assert.match(response, new RegExp(`localhost~${deadPort} is not reachable`));
+    assert.match(response, new RegExp(`localhost_${deadPort} is not reachable`));
 
     client.destroy();
   } finally {

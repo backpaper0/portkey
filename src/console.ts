@@ -105,7 +105,7 @@ export function renderConsolePage(gatewayPort: number): string {
 
   <div class="combo">
     <input class="host" id="host" placeholder="ホスト名 (例: localhost)" autocomplete="off">
-    <span class="sep">~</span>
+    <span class="sep">_</span>
     <input class="port" id="port" placeholder="ポート" inputmode="numeric" autocomplete="off">
   </div>
   <div class="hint" id="hint"></div>
@@ -122,8 +122,8 @@ export function renderConsolePage(gatewayPort: number): string {
       <dl>
         <dt>アップストリーム</dt>
         <dd>portkeyがリクエストを転送する先のHTTPサーバー。ホスト名とポートの組で識別します。</dd>
-        <dt>&lt;ホスト名&gt;~&lt;ポート&gt;</dt>
-        <dd>アップストリームを一意に指す識別子の書式。例: <code>myapp~3000</code></dd>
+        <dt>&lt;ホスト名&gt;_&lt;ポート&gt;</dt>
+        <dd>アップストリームを一意に指す識別子の書式。例: <code>myapp_3000</code></dd>
         <dt>ゲートウェイポート</dt>
         <dd>portkey自身が待ち受けるポート(既定 1541)。アップストリーム側のポートとは別物です。</dd>
       </dl>
@@ -154,7 +154,7 @@ export function renderConsolePage(gatewayPort: number): string {
   }
 
   function buildUrl(host, port) {
-    return "http://" + host.toLowerCase() + "~" + port + ".localhost:" + GATEWAY_PORT + "/";
+    return "http://" + host.toLowerCase() + "_" + port + ".localhost:" + GATEWAY_PORT + "/";
   }
 
   var hostEl = document.getElementById("host");

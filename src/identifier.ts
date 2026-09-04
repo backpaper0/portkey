@@ -15,7 +15,7 @@ export function classifyHost(hostHeader: string): HostClassification {
   }
 
   const identifier = host.slice(0, -".localhost".length);
-  const parts = identifier.split("~");
+  const parts = identifier.split("_");
   if (parts.length !== 2) {
     return { kind: "invalid" };
   }

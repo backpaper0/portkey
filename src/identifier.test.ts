@@ -11,7 +11,7 @@ test("末尾のゲートウェイポート表記は剥がされてから分類�
 });
 
 test("有効な識別子はアップストリームとして分類される", () => {
-  assert.deepEqual(classifyHost("web~3000.localhost"), {
+  assert.deepEqual(classifyHost("web_3000.localhost"), {
     kind: "upstream",
     hostname: "web",
     port: 3000,
@@ -19,7 +19,7 @@ test("有効な識別子はアップストリームとして分類される", ()
 });
 
 test("末尾のゲートウェイポート表記は剥がされてから分類される(アップストリーム)", () => {
-  assert.deepEqual(classifyHost("web~3000.localhost:1541"), {
+  assert.deepEqual(classifyHost("web_3000.localhost:1541"), {
     kind: "upstream",
     hostname: "web",
     port: 3000,
@@ -27,7 +27,7 @@ test("末尾のゲートウェイポート表記は剥がされてから分類�
 });
 
 test("ホスト名部分は小文字化される", () => {
-  assert.deepEqual(classifyHost("WEB~3000.localhost"), {
+  assert.deepEqual(classifyHost("WEB_3000.localhost"), {
     kind: "upstream",
     hostname: "web",
     port: 3000,
@@ -35,32 +35,32 @@ test("ホスト名部分は小文字化される", () => {
 });
 
 test("先頭ゼロ付きのポートは不正", () => {
-  assert.deepEqual(classifyHost("web~03000.localhost"), { kind: "invalid" });
+  assert.deepEqual(classifyHost("web_03000.localhost"), { kind: "invalid" });
 });
 
 test("範囲外のポート(0, 65536)は不正", () => {
-  assert.deepEqual(classifyHost("web~0.localhost"), { kind: "invalid" });
-  assert.deepEqual(classifyHost("web~65536.localhost"), { kind: "invalid" });
+  assert.deepEqual(classifyHost("web_0.localhost"), { kind: "invalid" });
+  assert.deepEqual(classifyHost("web_65536.localhost"), { kind: "invalid" });
 });
 
-test("セパレータ '~' が2回以上出現する識別子は不正", () => {
-  assert.deepEqual(classifyHost("web~30~00.localhost"), { kind: "invalid" });
+test("セパレータ '_' が2回以上出現する識別子は不正", () => {
+  assert.deepEqual(classifyHost("web_30_00.localhost"), { kind: "invalid" });
 });
 
-test("セパレータ '~' が出現しない識別子は不正", () => {
+test("セパレータ '_' が出現しない識別子は不正", () => {
   assert.deepEqual(classifyHost("web3000.localhost"), { kind: "invalid" });
 });
 
 test("ラベルの先頭がハイフンのホスト名は不正", () => {
-  assert.deepEqual(classifyHost("-web~3000.localhost"), { kind: "invalid" });
+  assert.deepEqual(classifyHost("-web_3000.localhost"), { kind: "invalid" });
 });
 
 test("ラベルの末尾がハイフンのホスト名は不正", () => {
-  assert.deepEqual(classifyHost("web-~3000.localhost"), { kind: "invalid" });
+  assert.deepEqual(classifyHost("web-_3000.localhost"), { kind: "invalid" });
 });
 
 test("'.localhost' で終わらないホストは不正", () => {
-  assert.deepEqual(classifyHost("web~3000.example.com"), { kind: "invalid" });
+  assert.deepEqual(classifyHost("web_3000.example.com"), { kind: "invalid" });
 });
 
 test("'localhost' サフィックス部分は大文字小文字を区別しない(コンソール)", () => {
@@ -68,7 +68,7 @@ test("'localhost' サフィックス部分は大文字小文字を区別しな�
 });
 
 test("'.localhost' サフィックス部分は大文字小文字を区別しない(アップストリーム)", () => {
-  assert.deepEqual(classifyHost("web~3000.LOCALHOST"), {
+  assert.deepEqual(classifyHost("web_3000.LOCALHOST"), {
     kind: "upstream",
     hostname: "web",
     port: 3000,
@@ -77,12 +77,12 @@ test("'.localhost' サフィックス部分は大文字小文字を区別しな�
 
 test("63文字を超えるホスト名ラベルは不正", () => {
   const label = "a".repeat(64);
-  assert.deepEqual(classifyHost(`${label}~3000.localhost`), { kind: "invalid" });
+  assert.deepEqual(classifyHost(`${label}_3000.localhost`), { kind: "invalid" });
 });
 
 test("63文字のホスト名ラベルは許可される", () => {
   const label = "a".repeat(63);
-  assert.deepEqual(classifyHost(`${label}~3000.localhost`), {
+  assert.deepEqual(classifyHost(`${label}_3000.localhost`), {
     kind: "upstream",
     hostname: label,
     port: 3000,
@@ -90,7 +90,7 @@ test("63文字のホスト名ラベルは許可される", () => {
 });
 
 test("ドット区切りの複数ラベルを持つホスト名も許可される", () => {
-  assert.deepEqual(classifyHost("my-app.internal~8080.localhost"), {
+  assert.deepEqual(classifyHost("my-app.internal_8080.localhost"), {
     kind: "upstream",
     hostname: "my-app.internal",
     port: 8080,

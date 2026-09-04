@@ -63,7 +63,7 @@ function identifierOf(classification: {
   hostname: string;
   port: number;
 }): string {
-  return `${classification.hostname}~${classification.port}`;
+  return `${classification.hostname}_${classification.port}`;
 }
 
 class ConnectTimeoutAgent extends http.Agent {

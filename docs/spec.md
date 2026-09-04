@@ -39,13 +39,13 @@ RFC 6761の`*.localhost`ループバック解決規定は、Name Resolution APIs
 
 ## 3. アップストリーム識別子のパース仕様
 
-`<ホスト名>~<ポート>` 形式。
+`<ホスト名>_<ポート>` 形式。
 
 ### 文字種・書式
 
 - ホスト名部分: DNSホスト名相当(RFC 952/1123準拠)。英数字・ハイフン・ドット区切りラベルのみ許可し、各ラベルの先頭/末尾にハイフンは不可。
 - ポート部分: `1`〜`65535`の範囲の10進数のみ。先頭ゼロ(例: `03000`)は不正。
-- セパレータ`~`はちょうど1回のみ出現を許可する。0回または2回以上は不正な識別子として扱う。
+- セパレータ`_`はちょうど1回のみ出現を許可する。0回または2回以上は不正な識別子として扱う。セパレータに`_`を採用する理由([ADR-0002](../docs/adr/0002-underscore-as-upstream-identifier-separator.md))は、ホスト名部分の許容文字集合に`_`が含まれず、`~`(Chromeの`*.localhost`ワイルドカード名前解決を壊す)・`-`(ホスト名自体がハイフンを含みうるためパースが曖昧になる)のいずれの問題も回避できるため。
 
 ### 大文字・小文字
 
@@ -124,7 +124,7 @@ RFC 6761の`*.localhost`ループバック解決規定は、Name Resolution APIs
 
 採用案(A案: 単一カラム・最小フォーム。プロトタイプは`prototype/console-ux`ブランチの`docs/prototypes/console-ux-prototype.html`の`?variant=A`を参照):
 
-- ホスト名とポートを1つのコンボ入力(`<ホスト名>` `~` `<ポート>`)で受け取る。
+- ホスト名とポートを1つのコンボ入力(`<ホスト名>` `_` `<ポート>`)で受け取る。
 - 入力に応じて生成されたURLをフォーム直下に即座に表示する(サーバーサイド生成ページ上でJSにより動的に組み立て)。
 - 生成されたURLはクリックでクリップボードにコピーでき、コピー後は短時間フィードバック表示(ボタンラベルの変化)を行う。
 - 用語説明・使い方は`<details>`による折りたたみに格納し、初見時の画面情報量を最小限にする。
@@ -151,6 +151,7 @@ RFC 6761の`*.localhost`ループバック解決規定は、Name Resolution APIs
 
 - [CONTEXT.md](../CONTEXT.md) — ドメイン用語集
 - [ADR-0001: `.localhost`サフィックス付きのホスト名をDNS解決に使わない](../docs/adr/0001-never-resolve-localhost-suffix-via-dns.md)
+- [ADR-0002: アップストリーム識別子のセパレータに`_`を採用する](../docs/adr/0002-underscore-as-upstream-identifier-separator.md)
 - [調査ドキュメント: `*.localhost`ワイルドカード解決の実環境動作](https://github.com/backpaper0/portkey/blob/research/localhost-wildcard-resolution/docs/research/localhost-wildcard-resolution.md)(`research/localhost-wildcard-resolution`ブランチ)
 - [コンソールUXプロトタイプ](https://github.com/backpaper0/portkey/blob/prototype/console-ux/docs/prototypes/console-ux-prototype.html)(`prototype/console-ux`ブランチ、スローアウェイ)
 - マップ: [portkey: 実装可能な仕様書とアーキテクチャ決定をロックする](https://github.com/backpaper0/portkey/issues/1)
