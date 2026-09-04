@@ -1,0 +1,27 @@
+{
+  "name": "portkey",
+  "version": "0.1.0",
+  "description": "サンドボックスコンテナ内の複数HTTPサーバーへ、単一ゲートウェイポート越しにサブドメインルーティングでアクセスするリバースプロキシ",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "bin": {
+    "portkey": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "start": "node dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test src"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.7.0"
+  }
+}
